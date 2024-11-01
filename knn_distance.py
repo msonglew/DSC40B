@@ -81,20 +81,12 @@ def knn_distance(arr, q, k):
 
 	"""
 
-	og_arr = list(arr)
+	def dist(x):
+		"""
+		distance between a point, x, and q
+  		"""
+		return abs(x-q)
 
-	for i in range(len(arr)):
-		arr[i] = abs(arr[i] - q)
-
-	k_close = quickselect(arr, k, 0, len(arr))
-
-	if k_close + q in og_arr:
-		return (k_close, k_close + q)
-	elif k_close - q in og_arr:
-		return (k_close, k_close - q)
-	elif -(k_close + q) in og_arr:
-		return (k_close, -(k_close + q))
-	elif -(k_close - q) in og_arr:
-		return (k_close, -(k_close - q))
-	elif abs(k_close - q) in og_arr:
-		return (k_close, abs(k_close - q))
+	# create (distance, point) pairs array
+	distance_point_pairs = [(dist(x), x) for x in arr]
+	return quickselect(distance_point_pairs, k, 0, len(arr))
