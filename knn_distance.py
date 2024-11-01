@@ -77,16 +77,16 @@ def knn_distance(arr, q, k):
 
 	# 2 elems same distance
 	>>> knn_distance([-1, 2, 3], 1, 2)
-	(2, 3)
+	(2, -1)
 
 	"""
 
 	def dist(x):
 		"""
-		distance between a point, x, and q
-  		"""
-		return abs(x-q)
+		distance between a point and q
+		"""
+		return abs(x - q)
 
-	# create (distance, point) pairs array
+	# create (distant, point) pairs array
 	distance_point_pairs = [(dist(x), x) for x in arr]
 	return quickselect(distance_point_pairs, k, 0, len(arr))
