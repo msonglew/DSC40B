@@ -1,6 +1,7 @@
 def max_points_on_line(X, p):
 	"""
-	Returns maximum number of points in X that fall on same straight line containing p
+	Returns maximum number of points in X that fall 
+	on same straight line containing p
 
 	Params:
 		X: list of 2-tuple of integers (points)
@@ -73,8 +74,8 @@ def max_points_on_line(X, p):
 
 	def slope(a, b):
 		"""
-		returns slope between two points
-		0 when y elements are the same
+		returns slope between two points, a and b, (tuple format)
+		returns 0 when first elements of points are the same
 		"""
 
 		if a[0] - b[0] == 0:
@@ -84,6 +85,7 @@ def max_points_on_line(X, p):
 	if len(X) == 0:
 		return 0
 
+	# slopes has length equal to or less than len(X)
 	slopes = {}
 	identity_point = 0
 
