@@ -22,28 +22,74 @@ def cluster(graph, weights, level):
 	>>> graph = dsc40graph.UndirectedGraph()
 	>>> for edge in edges: graph.add_edge(*edge)
 	>>> def weights(x, y):
-	... x, y = (x, y) if x < y else (y, x)
-	... return {("a", "b"): 1, ("b", "c"): .3, ("c", "d"): .9, ("a", "d"): .2}[(x, y)]
+	...	x, y = (x, y) if x < y else (y, x)
+	...	return {("a", "b"): 1, ("b", "c"): .3, ("c", "d"): .9, ("a", "d"): .2}[(x, y)]
 	>>> cluster(graph, weights, 0.4)
 	frozenset([frozenset(['a', 'b']), frozenset(['c', 'd'])])
 
-	# weight makes unconnected graph
+	# weight makes unconnected graph and level is an edge weight
 	>>> cluster(graph, weights, 1)
 	frozenset([frozenset(['a', 'b']), frozenset(['c']), frozenset(['d'])])
 
 	# unconnected graph
 	>>> graph.add_edge('e', 'f')
 	>>> def weights(x, y):
-	... x, y = (x, y) if x < y else (y, x)
-	... return {("a", "b"): 1, ("b", "c"): .3, ("c", "d"): .9, ("a", "d"): .2, ("e", "f"): .5}[(x, y)]
+	...	x, y = (x, y) if x < y else (y, x)
+	...	return {("a", "b"): 1, ("b", "c"): .3, ("c", "d"): .9, ("a", "d"): .2, ("e", "f"): .5}[(x, y)]
 	>>> cluster(graph, weights, 0.4)
 	frozenset([frozenset(['a', 'b']), frozenset(['c', 'd']), frozenset(['e', 'f'])])
 	
-	"""
+	"""		
 
-	# implement a modified full bfs/dfs with with a guard case
-	# i.e. continue only if edge weight is valid
+	def dfs(graph, u, weights, level, status=None, cluster=None):
+		"""Start a DFS at 'u'."""
+		# initialize status if it was not passed
+		if status is None:
+			status = {node: 'undiscovered' for node in graph.nodes}
 
-	
+		if cluster is None:
+			cluster = set()
+
+		status[u] = 'pending'
+
+		for v in graph.neighbors(u): # explore edge (u, v)
+			if (status[v] == 'undiscovered') and (level <= weights(u, v)):
+				cluster.add(frozenset([u,v]))
+				dfs(graph, v, weights, level, status, cluster)
+
+				# print(cluster)
+
+		if len(cluster) == 0:
+			cluster.add(frozenset(u))
+
+		status[u] = 'visited'
+
+		# print(cluster)
+
+		return cluster
+
+
+	# full_dfs implementation
+
+	status = {node: 'undiscovered' for node in graph.nodes}
+	clusters = frozenset()
+
+	for node in graph.nodes:
+		if status[node] == 'undiscovered':
+			# print("call to dfs -----------------")
+			clusters = clusters.union(dfs(graph, node, weights, level, status))
+			# print(clusters)
+
+	return clusters
+
+
+
+
+
+
+
+
+
+
 
 
